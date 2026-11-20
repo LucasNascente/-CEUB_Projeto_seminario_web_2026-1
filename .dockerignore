@@ -1,0 +1,13 @@
+*
+!common/
+!common/*.py
+!usuarios-service/
+!usuarios-service/app.py
+!usuarios-service/requirements.txt
+!chamados-service/
+!chamados-service/app.py
+!chamados-service/requirements.txt
+!gateway/
+!gateway/app.py
+!gateway/requirements.txt
+**/__pycache__/
