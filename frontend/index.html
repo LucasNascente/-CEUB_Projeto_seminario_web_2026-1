@@ -4,8 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#43054e">
-  <title>HelpDesk • Central de suporte</title>
+  <title>HelpDesk CEUB • Projeto acadêmico</title>
+  <link rel="stylesheet" href="/materialize.min.css">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/tailwind.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
@@ -19,20 +21,20 @@
       <div class="login-footer">Projeto acadêmico · CEUB</div>
     </section>
     <section class="login-panel">
-      <form id="login-form" class="login-form">
+      <form id="login-form" class="login-form tw-w-full">
         <h2>Entre na sua conta</h2>
         <p class="muted">Acesse a central com seu e-mail e senha.</p>
         <label>E-mail <input name="email" type="email" autocomplete="username" maxlength="180" placeholder="voce@exemplo.com" required></label>
         <label>Senha <input name="senha" type="password" autocomplete="current-password" maxlength="128" placeholder="Digite sua senha" required></label>
         <p id="login-error" class="form-error" role="alert" hidden></p>
-        <button type="submit" class="primary">Entrar</button>
+        <button type="submit" class="primary btn waves-effect">Entrar</button>
       </form>
     </section>
   </main>
 
   <div id="workspace" class="workspace" hidden>
     <aside>
-      <div class="brand"><span class="brand-icon" aria-hidden="true">H</span><span>HelpDesk<small>Central de suporte</small></span></div>
+      <div class="brand"><span class="brand-icon" aria-hidden="true">H</span><span>HelpDesk<small>Projeto acadêmico · CEUB</small></span></div>
       <nav id="navigation" aria-label="Menu principal"></nav>
       <div class="profile">
         <div id="avatar" class="avatar" aria-hidden="true"></div>
@@ -42,13 +44,13 @@
     </aside>
     <main class="content">
       <header class="topbar"><span>Área de trabalho</span><span id="top-role" class="role-tag"></span></header>
-      <div id="screen" class="screen" tabindex="-1"></div>
+      <div id="screen" class="screen tw-mx-auto" tabindex="-1"></div>
     </main>
   </div>
 
   <p id="initial" class="initial" role="status">Conectando à central de suporte…</p>
   <dialog id="modal" aria-labelledby="modal-title">
-    <header class="modal-head"><h2 id="modal-title"></h2><button id="close-modal" type="button" class="secondary" aria-label="Fechar janela">Fechar</button></header>
+    <header class="modal-head"><h2 id="modal-title"></h2><button id="close-modal" type="button" class="secondary btn-flat" aria-label="Fechar janela">Fechar</button></header>
     <div id="modal-body" class="modal-body"></div>
   </dialog>
 </body>

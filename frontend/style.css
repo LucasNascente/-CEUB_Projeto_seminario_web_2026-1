@@ -187,3 +187,20 @@ dialog::backdrop { background: #290331a6; }
   .panel-head, .modal-body { padding: .85rem; }
   .filters { width: 100%; }
 }
+
+/* Integração Materialize: preservar os controles nativos e a identidade CEUB. */
+html { line-height: 1.5; font-size: 16px; }
+body { color: var(--ink); }
+h1,h2,h3 { font-weight: 700; line-height: 1.2; }
+nav#navigation { background: transparent; box-shadow: none; height: auto; line-height: normal; width: auto; }
+.primary.btn, .secondary.btn-flat { height: auto; line-height: 1.4; text-transform: none; letter-spacing: normal; box-shadow: none; font-size: inherit; }
+.primary.btn { background: var(--ceub-purple); color: white; }
+.primary.btn:hover { background: var(--ceub-dark); }
+.hero .primary.btn { background: white; color: var(--ceub-purple); }
+.secondary.btn-flat { background: white; color: var(--ceub-dark); }
+label { color: var(--ink); }
+body label input:not([type=checkbox]):not([type=file]), body label textarea, body label select.browser-default { display: block; box-sizing: border-box; width: 100%; height: auto; margin: 0; border: 1px solid #98809f; border-radius: 9px; padding: .65rem .75rem; background-color: white; font-size: 1rem; box-shadow: none; }
+body label input:not([type=checkbox]):focus, body label textarea:focus { border-color: var(--ceub-purple); box-shadow: none; }
+body .check input[type=checkbox] { position: static; opacity: 1; pointer-events: auto; appearance: auto; }
+span.badge { float: none; min-width: 0; height: auto; line-height: 1.4; margin: 0; font-size: .86rem; }
+button:disabled { opacity: .7; }
