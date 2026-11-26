@@ -1,0 +1,1 @@
+module.exports = { content: ['./index.html', './app.js'], prefix: 'tw-', corePlugins: { preflight: false }, theme: { extend: { colors: { ceub: { dark: '#43054e', purple: '#662c92', magenta: '#ec0089', yellow: '#fde100' } } } } };

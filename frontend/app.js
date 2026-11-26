@@ -89,7 +89,7 @@ function signedIn(user) {
 }
 
 function button(text, action, className = "secondary") {
-  return node("button", { type: "button", class: className, onclick: action }, text);
+  return node("button", { type: "button", class: className + (className === "primary" ? " btn waves-effect" : className === "secondary" ? " btn-flat" : ""), onclick: action }, text);
 }
 
 function badge(dict, value) {
@@ -101,15 +101,15 @@ function formControl(label, name, attrs = {}, type = "input") {
 }
 
 function selectControl(label, name, options, initial = "") {
-  const select = node("select", { name, required: true }, options.map(([key, value]) =>
+  const select = node("select", { name, class: "browser-default", required: true }, options.map(([key, value]) =>
     node("option", { value: key, selected: String(key) === String(initial) }, value)));
   return node("label", {}, label, select);
 }
 
 function actionForm(children, caption, submit, inline = false) {
   const error = node("p", { class: "form-error", role: "alert", hidden: true });
-  const send = node("button", { type: "submit", class: "primary" }, caption);
-  return node("form", { class: "stack", onsubmit: async (event) => {
+  const send = node("button", { type: "submit", class: "primary btn waves-effect" }, caption);
+  return node("form", { class: "stack tw-grid tw-gap-4", onsubmit: async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     send.disabled = true;
@@ -132,18 +132,18 @@ function hero(title, summary, action) {
 }
 
 function metric(label, value) {
-  return node("section", { class: "metric" }, node("p", {}, label), node("strong", {}, value));
+  return node("section", { class: "metric z-depth-1 tw-min-w-0" }, node("p", {}, label), node("strong", {}, value));
 }
 
 function table(columns, rows, empty) {
   if (!rows.length) return node("p", { class: "empty" }, empty);
-  return node("div", { class: "table-wrap", tabindex: "0", role: "region", "aria-label": "Tabela de resultados" },
-    node("table", {}, node("thead", {}, node("tr", {}, columns.map((col) => node("th", { scope: "col" }, col)))),
+  return node("div", { class: "table-wrap tw-overflow-x-auto", tabindex: "0", role: "region", "aria-label": "Tabela de resultados" },
+    node("table", { class: "highlight" }, node("thead", {}, node("tr", {}, columns.map((col) => node("th", { scope: "col" }, col)))),
       node("tbody", {}, rows.map((row) => node("tr", {}, row.map((cell) => node("td", {}, cell)))))));
 }
 
 function panel(title, action, content) {
-  return node("section", { class: "panel" }, node("header", { class: "panel-head" }, node("h2", {}, title), action), content);
+  return node("section", { class: "panel z-depth-1 tw-min-w-0" }, node("header", { class: "panel-head" }, node("h2", {}, title), action), content);
 }
 
 function modal(title, content) {
@@ -187,7 +187,7 @@ async function navigate(key, focus = true) {
     }
   } catch (error) {
     if (version === state.sequence) screen.replaceChildren(
-      node("div", { class: "stack" }, node("p", { class: "form-error", role: "alert" }, error.message),
+      node("div", { class: "stack tw-grid tw-gap-4" }, node("p", { class: "form-error", role: "alert" }, error.message),
         button("Tentar novamente", () => navigate(key))));
   }
 }
@@ -258,7 +258,7 @@ function showTicket(id) {
     const ticket = await api("tickets/" + id);
     const admin = state.user.perfil === "administrador";
     const closed = ticket.status === "fechado";
-    const details = node("div", { class: "stack" },
+    const details = node("div", { class: "stack tw-grid tw-gap-4" },
       node("h3", {}, ticket.titulo),
       node("div", { class: "inline" }, badge(status, ticket.status), badge(priority, ticket.prioridade), badge(sla, ticket.sla)),
       node("p", { class: "small" }, ticket.categoria + " · Técnico: " + (ticket.tecnico || "Sem atribuição")),
