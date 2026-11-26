@@ -1,0 +1,42 @@
+name: Integração HelpDesk
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preparar ambiente de teste
+        run: |
+          python scripts/configure.py
+          python -m pip install requests==2.32.5
+          docker compose config --quiet
+      - name: Construir imagens e aguardar serviços saudáveis
+        run: |
+          docker compose up -d --build --wait --wait-timeout 120
+          docker compose ps
+      - name: Testar fluxos e permissões pelo Nginx
+        run: python tests/integration.py flow --fixture "$RUNNER_TEMP/helpdesk-test.json"
+      - name: Recriar contêineres e verificar a persistência
+        run: |
+          docker compose down
+          docker compose up -d --wait --wait-timeout 120
+          python tests/integration.py persistence --fixture "$RUNNER_TEMP/helpdesk-test.json"
+      - name: Diagnosticar falhas
+        if: failure()
+        run: docker compose logs --tail 80
+      - name: Limpar ambiente de teste
+        if: always()
+        run: docker compose down
