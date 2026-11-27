@@ -7,7 +7,7 @@ SwaggerUIBundle({
   persistAuthorization: false,
   withCredentials: true,
   requestInterceptor(request) {
-    if (["POST", "PATCH"].includes(request.method.toUpperCase())) {
+    if (["POST", "PATCH"].includes(request.method?.toUpperCase())) {
       request.headers["X-HelpDesk-Request"] = "1";
     }
     return request;
