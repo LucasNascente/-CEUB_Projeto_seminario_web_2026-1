@@ -1,0 +1,2000 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "HelpDesk CEUB — API",
+    "version": "1.0.0",
+    "description": "Entre pelo HelpDesk ou faça login em POST /api/users/login nesta página. O navegador envia o cookie HttpOnly automaticamente na mesma origem. O botão Authorize não é necessário. Use dados fictícios para experimentar."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Mesmo endereço do HelpDesk"
+    }
+  ],
+  "security": [
+    {
+      "SessionCookie": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Infraestrutura"
+        ],
+        "operationId": "health",
+        "summary": "Verificar a comunicação dos serviços",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": [
+          "Sessão"
+        ],
+        "operationId": "login",
+        "summary": "Iniciar sessão",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "headers": {
+              "Set-Cookie": {
+                "description": "Cria a sessão HttpOnly, SameSite Strict e Secure em HTTPS.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "429": {
+            "$ref": "#/components/responses/E429"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/users/logout": {
+      "post": {
+        "tags": [
+          "Sessão"
+        ],
+        "operationId": "logout",
+        "summary": "Encerrar sessão",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            },
+            "headers": {
+              "Set-Cookie": {
+                "description": "Expira o cookie de sessão.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "tags": [
+          "Sessão"
+        ],
+        "operationId": "me",
+        "summary": "Consultar a conta da sessão",
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "operationId": "listUsers",
+        "summary": "Listar usuários como administrador",
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "operationId": "createUser",
+        "summary": "Cadastrar usuário como administrador",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/users/{user_id}": {
+      "patch": {
+        "tags": [
+          "Usuários"
+        ],
+        "operationId": "updateUser",
+        "summary": "Editar usuário como administrador",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/categories": {
+      "get": {
+        "tags": [
+          "Categorias"
+        ],
+        "operationId": "listCategories",
+        "summary": "Listar categorias",
+        "description": "Administradores veem todas as categorias. Os demais veem apenas as ativas.",
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Categorias"
+        ],
+        "operationId": "createCategory",
+        "summary": "Criar categoria como administrador",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCategory"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/categories/{category_id}": {
+      "patch": {
+        "tags": [
+          "Categorias"
+        ],
+        "operationId": "updateCategory",
+        "summary": "Editar categoria como administrador",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditCategory"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/tickets": {
+      "get": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "listTickets",
+        "summary": "Listar chamados acessíveis",
+        "description": "Solicitantes veem seus chamados. Técnicos veem os atribuídos a eles. Administradores veem todos.",
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ticket"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "createTicket",
+        "summary": "Abrir chamado",
+        "description": "Solicitantes e administradores. SLA de 72, 24, 8 ou 4 horas corridas conforme a prioridade.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTicket"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketWithDescription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/tickets/{ticket_id}": {
+      "get": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "getTicket",
+        "summary": "Consultar chamado, histórico e anexos",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/tickets/{ticket_id}/assignment": {
+      "patch": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "assignTicket",
+        "summary": "Atribuir chamado a um técnico",
+        "description": "Somente administradores. O técnico deve estar ativo.",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Assignment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/tickets/{ticket_id}/status": {
+      "patch": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "updateStatus",
+        "summary": "Atualizar status e registrar resolução",
+        "description": "Técnico atribuído ou administrador. Consulte transicoes no detalhe do chamado.",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketWithDescription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/tickets/{ticket_id}/comments": {
+      "post": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "addComment",
+        "summary": "Comentar no chamado",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "415": {
+            "$ref": "#/components/responses/E415"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/tickets/{ticket_id}/attachments": {
+      "post": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "addAttachment",
+        "summary": "Enviar anexo",
+        "description": "Até cinco anexos por chamado, de até 5 MiB. Formatos PDF, PNG, JPG, JPEG, TXT e LOG.",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "$ref": "#/components/parameters/WriteHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Upload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Attachment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/E400"
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "409": {
+            "$ref": "#/components/responses/E409"
+          },
+          "413": {
+            "$ref": "#/components/responses/E413"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/tickets/{ticket_id}/attachments/{attachment_id}": {
+      "get": {
+        "tags": [
+          "Chamados"
+        ],
+        "operationId": "downloadAttachment",
+        "summary": "Baixar anexo",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Arquivo para download.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            },
+            "headers": {
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "404": {
+            "$ref": "#/components/responses/E404"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    },
+    "/api/reports": {
+      "get": {
+        "tags": [
+          "Relatórios"
+        ],
+        "operationId": "getReports",
+        "summary": "Consultar indicadores como administrador",
+        "responses": {
+          "200": {
+            "description": "Operação concluída.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Report"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/E401"
+          },
+          "403": {
+            "$ref": "#/components/responses/E403"
+          },
+          "502": {
+            "$ref": "#/components/responses/E502"
+          },
+          "503": {
+            "$ref": "#/components/responses/E503"
+          },
+          "504": {
+            "$ref": "#/components/responses/E504"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "SessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "helpdesk_session",
+        "description": "Cookie de sessão emitido pelo login."
+      }
+    },
+    "parameters": {
+      "WriteHeader": {
+        "name": "X-HelpDesk-Request",
+        "in": "header",
+        "required": true,
+        "description": "Use 1 para operações de escrita.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1"
+          ],
+          "default": "1"
+        }
+      }
+    },
+    "responses": {
+      "E400": {
+        "description": "Campos inválidos.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E401": {
+        "description": "Sem sessão válida ou credenciais inválidas.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E403": {
+        "description": "Operação sem permissão ou cabeçalho de proteção ausente.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E404": {
+        "description": "Registro inexistente ou fora do escopo.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E409": {
+        "description": "Conflito de dados ou estado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E413": {
+        "description": "Limite de tamanho excedido.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E415": {
+        "description": "Tipo de conteúdo incompatível.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E429": {
+        "description": "Limite de tentativas atingido.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E502": {
+        "description": "Serviço interno indisponível.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E503": {
+        "description": "Dependência indisponível.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "E504": {
+        "description": "Tempo de resposta excedido.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "Success": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok"
+            ]
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "required": [
+          "email",
+          "senha"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "format": "email"
+          },
+          "senha": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "format": "password",
+            "writeOnly": true
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "email",
+          "perfil",
+          "ativo",
+          "principal"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "nome": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "format": "email"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "solicitante",
+              "tecnico",
+              "administrador"
+            ]
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "principal": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NewUser": {
+        "type": "object",
+        "required": [
+          "nome",
+          "email",
+          "perfil",
+          "senha"
+        ],
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "format": "email"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "solicitante",
+              "tecnico",
+              "administrador"
+            ]
+          },
+          "senha": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 128,
+            "format": "password",
+            "writeOnly": true
+          }
+        }
+      },
+      "EditUser": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "format": "email"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "solicitante",
+              "tecnico",
+              "administrador"
+            ]
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "senha": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 128,
+            "format": "password",
+            "writeOnly": true
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "ativa"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "nome": {
+            "type": "string"
+          },
+          "ativa": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NewCategory": {
+        "type": "object",
+        "required": [
+          "nome"
+        ],
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "ativa": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EditCategory": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "ativa": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NewTicket": {
+        "type": "object",
+        "required": [
+          "titulo",
+          "descricao",
+          "categoria_id",
+          "prioridade"
+        ],
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "descricao": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 6000
+          },
+          "categoria_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "prioridade": {
+            "type": "string",
+            "enum": [
+              "baixa",
+              "media",
+              "alta",
+              "critica"
+            ]
+          }
+        }
+      },
+      "Ticket": {
+        "type": "object",
+        "required": [
+          "id",
+          "titulo",
+          "categoria",
+          "categoria_id",
+          "prioridade",
+          "status",
+          "solicitante_id",
+          "tecnico_id",
+          "tecnico",
+          "criado_em",
+          "prazo_em",
+          "resolvido_em",
+          "sla"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "categoria_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "prioridade": {
+            "type": "string",
+            "enum": [
+              "baixa",
+              "media",
+              "alta",
+              "critica"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "aberto",
+              "em_atendimento",
+              "aguardando_usuario",
+              "resolvido",
+              "fechado"
+            ]
+          },
+          "solicitante_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "tecnico_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647,
+            "nullable": true
+          },
+          "tecnico": {
+            "type": "string",
+            "nullable": true
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "prazo_em": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resolvido_em": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sla": {
+            "type": "string",
+            "enum": [
+              "no_prazo",
+              "atrasado",
+              "cumprido",
+              "violado"
+            ]
+          }
+        }
+      },
+      "TicketWithDescription": {
+        "type": "object",
+        "required": [
+          "id",
+          "titulo",
+          "categoria",
+          "categoria_id",
+          "prioridade",
+          "status",
+          "solicitante_id",
+          "tecnico_id",
+          "tecnico",
+          "criado_em",
+          "prazo_em",
+          "resolvido_em",
+          "sla",
+          "descricao",
+          "resolucao"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "categoria_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "prioridade": {
+            "type": "string",
+            "enum": [
+              "baixa",
+              "media",
+              "alta",
+              "critica"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "aberto",
+              "em_atendimento",
+              "aguardando_usuario",
+              "resolvido",
+              "fechado"
+            ]
+          },
+          "solicitante_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "tecnico_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647,
+            "nullable": true
+          },
+          "tecnico": {
+            "type": "string",
+            "nullable": true
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "prazo_em": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resolvido_em": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sla": {
+            "type": "string",
+            "enum": [
+              "no_prazo",
+              "atrasado",
+              "cumprido",
+              "violado"
+            ]
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "resolucao": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TicketDetail": {
+        "type": "object",
+        "required": [
+          "id",
+          "titulo",
+          "categoria",
+          "categoria_id",
+          "prioridade",
+          "status",
+          "solicitante_id",
+          "tecnico_id",
+          "tecnico",
+          "criado_em",
+          "prazo_em",
+          "resolvido_em",
+          "sla",
+          "descricao",
+          "resolucao",
+          "historico",
+          "anexos",
+          "transicoes"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "categoria_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "prioridade": {
+            "type": "string",
+            "enum": [
+              "baixa",
+              "media",
+              "alta",
+              "critica"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "aberto",
+              "em_atendimento",
+              "aguardando_usuario",
+              "resolvido",
+              "fechado"
+            ]
+          },
+          "solicitante_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "tecnico_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647,
+            "nullable": true
+          },
+          "tecnico": {
+            "type": "string",
+            "nullable": true
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "prazo_em": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resolvido_em": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sla": {
+            "type": "string",
+            "enum": [
+              "no_prazo",
+              "atrasado",
+              "cumprido",
+              "violado"
+            ]
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "resolucao": {
+            "type": "string",
+            "nullable": true
+          },
+          "historico": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoryEvent"
+            }
+          },
+          "anexos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            }
+          },
+          "transicoes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "aberto",
+                "em_atendimento",
+                "aguardando_usuario",
+                "resolvido",
+                "fechado"
+              ]
+            }
+          }
+        }
+      },
+      "HistoryEvent": {
+        "type": "object",
+        "required": [
+          "id",
+          "tipo",
+          "autor_id",
+          "autor",
+          "mensagem",
+          "criado_em"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "abertura",
+              "atribuicao",
+              "status",
+              "resolucao",
+              "comentario",
+              "anexo"
+            ]
+          },
+          "autor_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "autor": {
+            "type": "string"
+          },
+          "mensagem": {
+            "type": "string"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Attachment": {
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "tamanho"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "nome": {
+            "type": "string"
+          },
+          "tamanho": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5242880
+          }
+        }
+      },
+      "Assignment": {
+        "type": "object",
+        "required": [
+          "tecnico_id"
+        ],
+        "properties": {
+          "tecnico_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          }
+        }
+      },
+      "StatusUpdate": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "aberto",
+              "em_atendimento",
+              "aguardando_usuario",
+              "resolvido",
+              "fechado"
+            ]
+          },
+          "resolucao": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 6000,
+            "description": "Obrigatória para o estado resolvido."
+          }
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "required": [
+          "mensagem"
+        ],
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          }
+        }
+      },
+      "Upload": {
+        "type": "object",
+        "required": [
+          "arquivo"
+        ],
+        "properties": {
+          "arquivo": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "required": [
+          "total",
+          "por_status",
+          "media_resolucao_horas",
+          "resolvidos",
+          "por_tecnico"
+        ],
+        "properties": {
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "por_status": {
+            "type": "object",
+            "required": [
+              "aberto",
+              "em_atendimento",
+              "aguardando_usuario",
+              "resolvido",
+              "fechado"
+            ],
+            "properties": {
+              "aberto": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "em_atendimento": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "aguardando_usuario": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "resolvido": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "fechado": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "media_resolucao_horas": {
+            "type": "number",
+            "nullable": true
+          },
+          "resolvidos": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "por_tecnico": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "nome",
+                "total"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647
+                },
+                "nome": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "total": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

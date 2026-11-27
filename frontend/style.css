@@ -64,6 +64,8 @@ select {
 .login-intro h1 { font-size: clamp(2.3rem, 4.7vw, 5rem); line-height: 1.02; letter-spacing: -.055em; margin: .8rem 0 1.3rem; }
 .login-intro > p:last-child { color: var(--on-brand); line-height: 1.65; max-width: 32rem; font-size: clamp(1rem, 1.7vw, 1.24rem); }
 .login-footer { color: var(--on-brand); font-size: .89rem; }
+.api-link { color: inherit; }
+.api-link-mobile { display: none; }
 .login-panel { display: grid; place-items: center; padding: 2rem; background: white; }
 .login-form { width: min(100%, 390px); display: grid; gap: 1rem; }
 .login-form h2 { font-size: 2rem; letter-spacing: -.035em; }
@@ -178,6 +180,7 @@ dialog::backdrop { background: #290331a6; }
   .login-brand { padding: 1.55rem; gap: 1.55rem; }
   .login-intro h1 { max-width: 25rem; }
   .login-footer { display: none; }
+  .api-link-mobile { display: inline; }
   .login-panel { padding: 1.6rem 1.2rem; align-items: start; }
 }
 @media (max-width: 420px) {

@@ -92,6 +92,12 @@ class Integration(unittest.TestCase):
     def test_health_and_origin(self):
         response = self.call(self.admin, "GET", "/", 200)
         self.assertIn("Entre na sua conta", response.text)
+        self.assertIn("swagger-ui-bundle.js", self.call(self.admin, "GET", "/api-docs/", 200).text)
+        spec = self.call(self.admin, "GET", "/api-docs/openapi.json", 200).json()
+        self.assertTrue(spec["openapi"].startswith("3."))
+        self.assertIn("post", spec["paths"]["/api/tickets"])
+        bundle = self.call(self.admin, "GET", "/api-docs/vendor/swagger-ui-bundle.js", 200)
+        self.assertGreater(len(bundle.content), 100_000)
         self.assertIn("frame-ancestors 'none'", response.headers["Content-Security-Policy"])
         self.assertEqual(self.call(self.admin, "GET", "/health", 200).json(), {"status": "ok"})
         self.assertIn("HttpOnly", self.login(self.admin, ADMIN_EMAIL, ADMIN_PASSWORD).headers["Set-Cookie"])
