@@ -21,3 +21,10 @@ A primeira rodada da suíte de integração encontrou o limite de login do Nginx
 Os testes em `tests/integration.py` usam a mesma URL que o navegador. Execute-os em uma instância exclusiva de teste, conforme o [README](../README.md). O workflow de integração verifica a configuração, constrói as imagens, espera os seis contêineres saudáveis e executa as fases de fluxo e persistência. A segunda fase recria também os contêineres dos bancos e reutiliza os volumes.
 
 Disponibilidade e tempo de resposta sob carga são metas. Essa rodada não incluiu teste de carga, medição de disponibilidade em produção ou envio por provedor externo.
+
+
+## Demonstração pública no Render
+
+O [endpoint público](https://helpdesk-ceub.onrender.com/) passou nos testes de login e logout, escopo de usuários, ciclo do chamado, anexos, histórico, SLA e relatórios com dados fictícios. Uma nova sessão releu o chamado, o histórico e o anexo. O [Swagger](https://helpdesk-ceub.onrender.com/api-docs/) abriu no navegador e executou `GET /health` com resposta 200. As rotas de negócio dos microsserviços recusaram acesso direto, e o cookie de sessão incluiu Secure e HttpOnly.
+
+A [execução do GitHub Actions](https://github.com/LucasNascente/-CEUB_Projeto_seminario_web_2026-1/actions/runs/45916901388) também passou com Docker Compose, incluindo a recriação da stack com reaproveitamento dos volumes. O envio de e-mail é opcional na execução local. A demonstração no Render Free opera sem SMTP.

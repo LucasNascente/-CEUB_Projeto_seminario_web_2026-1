@@ -52,9 +52,11 @@ flowchart LR
     M -->|SMTP com STARTTLS| SMTP[Servidor de e-mail]
 ```
 
+Na demonstração pública, o frontend Nginx e o gateway compartilham o serviço de entrada. Usuários e Chamados continuam em serviços independentes, cada um ligado ao banco Neon correspondente por TLS. O gateway e Chamados incluem uma chave de serviço nas chamadas autorizadas via HTTPS. Os microsserviços rejeitam acesso direto às rotas de negócio sem a chave. A sessão do navegador usa cookie Secure.
+
 ### Camadas e componentes
 
-- **Apresentação.** HTML e CSS responsivos com JavaScript nativo, busca, filtros, formulários e painel por perfil. Nginx serve os arquivos e encaminha `/api/` com o caminho original.
+- **Apresentação.** HTML e JavaScript nativo com CSS responsivo, Tailwind CSS e Materialize, busca, filtros, formulários e painel por perfil. Nginx serve os arquivos e encaminha `/api/` com o caminho original.
 - **Entrada.** API Gateway Flask roteia por recurso, repassa cabeçalhos necessários e define limites de espera e respostas JSON para falha no upstream.
 - **Domínio.** Usuários valida a sessão, administra contas e controla perfis. Chamados administra a fila, o catálogo, a linha do tempo, os anexos, os prazos e os indicadores.
 - **Dados.** SQLAlchemy ORM e Psycopg gerenciam dois bancos PostgreSQL 16. As referências de usuário no banco de chamados são IDs de domínio validados via REST.
@@ -126,6 +128,7 @@ Não há CDN, cache distribuído ou balanceamento entre réplicas nesta entrega.
 | --- | --- | --- |
 | Desenvolvimento e demonstração | `http://localhost:8080` | Docker Compose com variáveis e volumes locais |
 | Integração | Ambiente efêmero de teste | Construção, teste de ponta a ponta e recriação com dados persistidos |
+| Demonstração pública | [HelpDesk CEUB](https://helpdesk-ceub.onrender.com/) | Três serviços Free no Render e dois bancos PostgreSQL no Neon |
 | Homologação e produção | Sem endereço provisionado | Exigiriam TLS, monitoramento, backup programado e política de acesso |
 
 ## 9. Decisões arquiteturais

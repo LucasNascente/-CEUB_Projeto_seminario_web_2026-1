@@ -2,6 +2,10 @@
 
 Sistema web de gerenciamento de chamados de suporte técnico. Projeto acadêmico de Ciência da Computação do CEUB.
 
+**Demonstração para a aula:** [abrir HelpDesk](https://helpdesk-ceub.onrender.com/) · [abrir Swagger](https://helpdesk-ceub.onrender.com/api-docs/) · [ver skills](SKILLS.md).
+
+A demonstração usa dados fictícios. O primeiro acesso após inatividade pode demorar enquanto os serviços Free retomam.
+
 O navegador acessa o frontend Nginx e suas rotas REST na mesma origem. Um API Gateway encaminha as requisições a dois microsserviços Flask. Cada serviço usa seu próprio PostgreSQL 16.
 
 ```mermaid
