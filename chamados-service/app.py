@@ -22,6 +22,7 @@ USERS = os.environ["USERS_URL"].rstrip("/")
 SERVICE_KEY = os.environ["SERVICE_KEY"]
 if len(SERVICE_KEY) < 32:
     raise RuntimeError("SERVICE_KEY deve ter pelo menos 32 caracteres.")
+USERS_READ_TIMEOUT = int(os.getenv("USERS_READ_TIMEOUT", "4"))
 SMTP_HOST = os.getenv("SMTP_HOST")
 SLA_HOURS = {"baixa": 72, "media": 24, "alta": 8, "critica": 4}
 TRANSITIONS = {
@@ -152,7 +153,7 @@ def get_session():
 
 def users_get(path, headers):
     try:
-        response = requests.get(f"{USERS}{path}", headers=headers, timeout=(2, 4),
+        response = requests.get(f"{USERS}{path}", headers={**headers, "X-Service-Key": SERVICE_KEY}, timeout=(3, USERS_READ_TIMEOUT),
                                 allow_redirects=False)
         if response.ok and response.status_code == 200:
             return response.json()

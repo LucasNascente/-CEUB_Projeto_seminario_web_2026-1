@@ -8,6 +8,9 @@ from common.web import app_config
 app = app_config(__name__)
 USERS = os.environ["USERS_URL"].rstrip("/")
 TICKETS = os.environ["TICKETS_URL"].rstrip("/")
+SERVICE_KEY = os.getenv("SERVICE_KEY")
+READ_TIMEOUT = int(os.getenv("UPSTREAM_READ_TIMEOUT", "12"))
+SERVICE_HEADERS = {"X-Service-Key": SERVICE_KEY} if SERVICE_KEY else {}
 REQUEST_HEADERS = {"content-type", "cookie", "x-helpdesk-request"}
 RESPONSE_HEADERS = {"content-type", "content-disposition", "set-cookie"}
 
@@ -16,7 +19,7 @@ RESPONSE_HEADERS = {"content-type", "content-disposition", "set-cookie"}
 def health():
     for upstream in (USERS, TICKETS):
         try:
-            requests.get(f"{upstream}/health", timeout=(2, 3)).raise_for_status()
+            requests.get(f"{upstream}/health", headers=SERVICE_HEADERS, timeout=(3, min(READ_TIMEOUT, 65))).raise_for_status()
         except requests.RequestException:
             abort(503, "Serviço interno indisponível.")
     return {"status": "ok"}
@@ -37,10 +40,11 @@ def proxy(section, path):
     suffix = f"/{path}" if path else ""
     target = f"{upstream}/api/{section}{suffix}"
     headers = {key: value for key, value in request.headers if key.lower() in REQUEST_HEADERS}
+    headers.update(SERVICE_HEADERS)
     try:
         response = requests.request(
             request.method, target, params=request.args.items(multi=True),
-            headers=headers, data=request.get_data(), timeout=(2, 12), allow_redirects=False,
+            headers=headers, data=request.get_data(), timeout=(3, READ_TIMEOUT), allow_redirects=False,
         )
     except requests.Timeout:
         abort(504, "O serviço demorou a responder.")

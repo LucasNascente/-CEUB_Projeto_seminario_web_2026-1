@@ -1,3 +1,4 @@
+import hmac
 import os
 from datetime import datetime, timezone
 
@@ -23,6 +24,22 @@ def iso(value):
 def app_config(name):
     app = Flask(name)
     app.config["MAX_CONTENT_LENGTH"] = UPLOAD_LIMIT + 64 * 1024
+
+    if os.getenv("REQUIRE_SERVICE_KEY") == "1":
+        service_key = os.environ.get("SERVICE_KEY", "").encode()
+        if len(service_key) < 32:
+            raise RuntimeError("SERVICE_KEY deve ter pelo menos 32 caracteres.")
+
+        @app.before_request
+        def protect_service():
+            if request.path != "/ready" and not hmac.compare_digest(
+                request.headers.get("X-Service-Key", "").encode(), service_key,
+            ):
+                abort(403, "Acesso permitido somente pelo gateway.")
+
+    @app.get("/ready")
+    def ready():
+        return {"status": "ok"}
 
     @app.before_request
     def protect_writes():

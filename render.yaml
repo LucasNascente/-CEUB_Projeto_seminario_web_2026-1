@@ -1,0 +1,62 @@
+# Os bancos Neon já existem. Este Blueprint provisiona somente os serviços web.
+services:
+  - type: web
+    name: helpdesk-ceub-usuarios
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./usuarios-service/Dockerfile
+    dockerContext: .
+    healthCheckPath: /ready
+    envVars:
+      - fromGroup: helpdesk-ceub-interno
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        value: admin@helpdesk.local
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: REQUIRE_SERVICE_KEY
+        value: "1"
+  - type: web
+    name: helpdesk-ceub-chamados
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./chamados-service/Dockerfile
+    dockerContext: .
+    healthCheckPath: /ready
+    envVars:
+      - fromGroup: helpdesk-ceub-interno
+      - key: DATABASE_URL
+        sync: false
+      - key: USERS_URL
+        sync: false
+      - key: USERS_READ_TIMEOUT
+        value: "65"
+      - key: REQUIRE_SERVICE_KEY
+        value: "1"
+  - type: web
+    name: helpdesk-ceub
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./deploy/entry.Dockerfile
+    dockerContext: .
+    healthCheckPath: /ready
+    envVars:
+      - fromGroup: helpdesk-ceub-interno
+      - key: USERS_URL
+        sync: false
+      - key: TICKETS_URL
+        sync: false
+      - key: UPSTREAM_READ_TIMEOUT
+        value: "145"
+
+envVarGroups:
+  - name: helpdesk-ceub-interno
+    envVars:
+      - key: SERVICE_KEY
+        generateValue: true

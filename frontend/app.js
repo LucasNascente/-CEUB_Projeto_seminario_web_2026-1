@@ -38,7 +38,7 @@ async function api(path, method = "GET", data) {
   try {
     response = await fetch("/api/" + path, {
       method, headers, body: headers["Content-Type"] ? JSON.stringify(data) : data,
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(155000),
     });
   } catch {
     throw new ApiError("Não foi possível conectar à central. Tente novamente.", 0);

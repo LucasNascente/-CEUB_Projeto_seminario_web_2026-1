@@ -31,6 +31,13 @@ Se a porta 8080 estiver ocupada, ajuste `PORT` no `.env`, ou gere o arquivo inic
 
 `docker compose down` para e remove os contêineres mantendo os volumes. Para voltar após uma alteração, execute novamente `docker compose up -d --build --wait`.
 
+## Documentação da API e skills
+
+- [Swagger UI local](http://localhost:8080/api-docs/) com operações interativas. Faça login no HelpDesk ou execute a operação de login no próprio Swagger para usar a sessão do navegador.
+- [Especificação OpenAPI](frontend/api-docs/openapi.json) com rotas, permissões e formatos de entrada e saída.
+- [Skills e tecnologias aplicadas](SKILLS.md).
+- [Configuração de hospedagem](render.yaml) para três serviços web Free e dois bancos PostgreSQL externos.
+
 ## Apresentação
 
 1. Entre como administrador e cadastre uma conta de solicitante e outra de técnico em **Usuários**. Confira o catálogo em **Categorias**.
